@@ -17,7 +17,7 @@ public class UserService {
         String email;
         boolean isValid;
         do {
-            System.out.println("Lutfen email adesinizi giriniz");
+            System.out.println("Lutfen email adresinizi giriniz");
             email = input.nextLine();
             isValid = validateEmail(email);
 
@@ -34,8 +34,8 @@ public class UserService {
             System.out.println("Lutfenn sifrenizi giriiniz");
             password =input.nextLine();
             pswIsValid=validatePsw(password);
-            if (!passwords.contains(password)){
-                System.out.println("Lutfen sistemimizde kayitli bir sifre giriniz");
+            if (!pswIsValid){
+                System.out.println("Lutfen kriterlere uygun bir sifre giriniz");
             }
 
         }while(!pswIsValid);
@@ -47,6 +47,25 @@ public class UserService {
         System.out.println("Email ve sifreniz ile sisteme giris yapabilirsiniz");
 
     }
+
+    public void login(){
+
+        boolean isValidLogin;
+        do {
+
+            System.out.println("Lutfen sistemde kayitli olan email adresinizi giriniz");
+            String email = input.nextLine();
+
+            System.out.println("lutfen sifrenizi giriniz");
+            String password = input.nextLine();
+
+            isValidLogin = validateLogin(email,password);
+
+        }while(!isValidLogin);
+
+
+    }
+
 
     private boolean validatePsw(String psw) {
     // password validation: boşluk içermemeli
@@ -133,5 +152,24 @@ public class UserService {
         return isValid;
 
     }
+
+
+    private boolean validateLogin(String email, String password){
+
+          boolean isvalid;
+
+        if (!emails.contains(email)) {
+            System.out.println("Yanlis veya kayitli olmayan bir email girdiniz");
+        }
+        if (!(passwords.get(emails.indexOf(email)).equals(password))) {
+            System.out.println("Yanlis bir sifre girdiniz");
+        }
+
+        isvalid=emails.contains(email)&&(passwords.get(emails.indexOf(email)).equals(password));
+
+        System.out.println("Sisteme giris yaptiniz");
+        return isvalid;
+    }
+
 
 }

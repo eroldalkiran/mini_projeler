@@ -34,6 +34,35 @@ public class LoginPageApp {
         // tum userlarin ozelliklerini bir class
 
 
+        start();
 
+    }
+
+    public static void start() {
+
+        UserService userService = new UserService();
+        int choice;
+        do {
+            System.out.println("1. Üye Ol");
+            System.out.println("2. Giriş Yap");
+            System.out.println("3. Çıkış");
+            System.out.print("Seçiminizi yapınız: ");
+            choice = userService.input.nextInt();
+            userService.input.nextLine(); // Yeni satır karakterini temizlemek için
+
+            switch (choice) {
+                case 1:
+                    userService.register();
+                    break;
+                case 2:
+                    userService.login();
+                    break;
+                case 3:
+                    System.out.println("Çıkış yapılıyor...");
+                    break;
+                default:
+                    System.out.println("Geçersiz seçim, lütfen tekrar deneyiniz.");
+            }
+        } while (choice != 3);
     }
 }
