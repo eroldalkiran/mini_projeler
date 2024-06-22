@@ -30,91 +30,61 @@ public class BiletRezervasyonApp {
          Kişi 65 yaşından büyük ise son bilet fiyatı üzerinden %30 indirim uygulanır.
          */
     public static void main(String[] args) {
-
-        Scanner scanner = new Scanner(System.in);
-        //bilet rezervazyonu yapabilmek icin
-        Bus bus = new Bus("34 TECH 34","TECHPRO","2.PERON");
-
-
-        //3-bilet bilgilerini ve islemlerini yapmasi icin bilet objesi
-
-         boolean isAgain = false;
-
-        do {
-            System.out.println("**********Otobus bileti alma**********");
-            System.out.println("lutfen mesafeyi Km olarak giriniz giriniz");
-            double distance = scanner.nextDouble();
-            System.out.println("Lutfen yolculuk tipini seciniz :\n 1. Tek yon \n 2. Cift yon");
-            int typeNo = scanner.nextInt();
-
-            System.out.println("Lutfen yasinizi giriniz : ");
-            int age = scanner.nextInt();
-
-            System.out.println("Lutfen koltuk no yu giriniz (1 - 32) " +"\n bos koltuklari asagidaki tabloda gorebilirsiniz : " );
-            bus.printSeatStatus();
-            int seatNo = scanner.nextInt();
-
-             if (distance<0){
-                 System.out.println("Hatali mesafe girisi yaptiniz lutfen tekrar deneyin");
-                 continue;
-             }
-             if(typeNo<1||typeNo>2){
-                 System.out.println("Hatali seyahat tipi sectiniz lutfen tekrar deneyin");
-                 continue;
-             }
-             if (seatNo<1||seatNo>32){
-                 System.out.println("Hatali koltuk numarasi girdiniz lutfen tekrar deneyin");
-                 continue;
-             }
-             if(age<0){
-                 System.out.println("Hatali yas girisi yaptiniz");
-
-                 continue;
-             }
-             if(bus.seatStatus[seatNo-1]){
-                 System.out.println("Seçtiğiniz koltuk dolu. Lütfen başka bir koltuk numarası seçin.");
-                 continue;
-             }
-
-            scanner.nextLine();
-            System.out.println("lutfen adinizi giriniz : ");
-            String firstName = scanner.nextLine();
-
-            System.out.println("Lutfen Soyadinizi giriniz");
-            String lastName = scanner.nextLine();
-
-            Ticket ticket = new Ticket(distance,typeNo,seatNo,firstName,lastName);
-
-            if(typeNo==2){
-                System.out.println("Bilet basariyla oluturulmustur");
-                bus.addTicket(ticket,age);
-                System.out.println(bus);
-                System.out.println("Gidis donus bileti aldiginiz icin %20 indirim uygulanmistir");
-                System.out.println(ticket);
-            } else if (age<12) {
-                System.out.println("Bilet basariyla oluturulmustur");
-                bus.addTicket(ticket,age);
-                System.out.println(bus);
-                System.out.println("12 yasindan kucuklere %50 indirim uygulanmistir ");
-                System.out.println(ticket);
-            } else if (age>65) {
-                System.out.println("Bilet basariyla oluturulmustur");
-                bus.addTicket(ticket,age);
-                System.out.println(bus);
-                System.out.println("65 yasindak buyuklere %30 indirim uygulanmaktadir");
-                System.out.println(ticket);
-            }else{
-                System.out.println("Bilet basariyla oluturulmustur");
-                bus.addTicket(ticket,age);
-                System.out.println(bus);
-                System.out.println(ticket);
-            }
-            System.out.println("Yeni islem icin 1, cikis icin 0'i seciniz");
-            int select= scanner.nextInt();
-            isAgain=select==1?true:false;
-
-        }while(isAgain);
-
-
+        //1- bilet rezervasyonu yapabilmek icin
+        Bus bus1=new Bus("34 TECH 34","TECHPRO","2. Peron");
+        //3- bilet bilgilerini ve işlemleri yapmasi icin bilet objesine ihtiyacimiz var
+        Ticket ticket=new Ticket();
+        //7- uygulamayi baslatan bir method
+        start(bus1,ticket);
     }
+
+    private static void start(Bus bus1, Ticket ticket) {
+        Scanner input=new Scanner(System.in);
+        String select;
+        do {
+            //8- kullanicidan bilgileri alalım
+            System.out.println("--Bilet rezervasyon uygulamasina hosgeldiniz--");
+            System.out.println("Lutfen gidilicek mesafe bilgisini KM olarak giriniz");
+            double distance=input.nextDouble();
+
+            System.out.println("Lutfen yasinizi giriniz");
+            int age= input.nextInt();
+
+            System.out.println("Lutfen yolculuk tipini seciniz");
+            System.out.println("1. Tek Yön");
+            System.out.println("2. Gidiş-Dönüş");
+            int type= input.nextInt();
+
+            System.out.println("Lutfen Koltuk No seciniz : ");
+            System.out.println("Tekli Koltuk ücreti %20 daha fazladir");
+            System.out.println(bus1.seats);
+            int seat= input.nextInt();
+            //secilen koltuk no listede var mi,rezerve edilmiş mi?
+            boolean isReserved=!bus1.seats.contains(seat);//rezerve edilmiş mi?
+            if (isReserved){
+                System.out.println("Secilen koltuk rezerve edilmiştir");
+            }
+            //girilen degerler gecerli mi?
+            if (age>0&&distance>0&&(type==1||type==2)&&!isReserved){
+                //girilen degerli gecerli ise koltugu listeden kaldırmak
+                bus1.seats.remove(seat);
+
+                //bilet olusturalım
+                ticket.distance=distance;
+                ticket.seatNo=seat;
+                ticket.typeNo=type;
+                ticket.getTotalPrice(age);//price degeri hesaplayıp atama işlemi
+                //bileti yazdiralim
+                ticket.printTicket(bus1);
+            }else {
+                System.err.println("Hatalı Veri Girdiniz!!!");
+            }
+            System.out.println("Yeni islem icin herhangi bir degere,cıkıs icin q'ya basınız");
+            select= input.next().toLowerCase();
+
+        }while (!select.equals("q"));
+        System.out.println("iyi günler dileriz ve tekrar bekleriz <3");
+    }
+
+
 }
